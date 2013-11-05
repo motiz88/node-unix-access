@@ -23,7 +23,7 @@ Two arguments will be passed over the callback: error message, and operation res
 
 ### Node.js examples
 
-```
+```js
     var access = require('unix-access');
 
     // synchronous check for existence of the file
