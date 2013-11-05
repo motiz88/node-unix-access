@@ -1,0 +1,32 @@
+{
+  "name": "unix-access",
+  "version": "0.1.0",
+  "description": "Wrapper for access() UNIX C function",
+  "main": "./index.js",
+  "scripts": {
+    "test": "mocha --reporter spec test/test.js"
+  },
+  "keywords": [
+    "access",
+    "unix",
+    "permission",
+    "permissions",
+    "wrapper"
+  ],
+  "author": {
+    "name": "Pavel Lobodinský",
+    "email": "pavel.lobo@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lobodpav/node-unix-access.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lobodpav/node-unix-access/issues?state=open"
+  },
+  "readmeFilename": "README.md",
+  "license": "MIT",
+  "devDependencies": [
+    "mocha"
+  ]
+}
