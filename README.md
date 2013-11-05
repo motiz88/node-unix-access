@@ -14,8 +14,9 @@ For more information about `access()` function, see `access` manual page.
 
 After requiring the module by `require('unix-access')`, you can run two functions available: `sync` and `async`.
 
-`sync` function accepts two arguments of String type: path and permissions. Return value is of Boolean type.
-`True` indicates you do have the permissions you were testing the path for, `False` means you do not.
+`sync` function accepts two arguments of `String` type: path and permissions. Return value is of `Boolean` type.
+Permissions may contain case-insensitive combination of `r`, `w`, and `x` characters. Any other characters will be stripped out.
+`True` return value indicates you do have the permissions you were testing the path for, `False` means you do not.
 
 `async` function works the same way as `sync` except one additional argument: callback.
 Two arguments will be passed over the callback: error message, and operation result of `Boolean` type.
@@ -59,7 +60,7 @@ Tested on Debian Wheezy 7.0. Requires:
 
 # Dependencies
 
-The module does not depend on any other code. For developers of this tool, Mocha is the only dependency for running unit tests.
+The module does not depend on any other code. For developers of this tool, `mocha` and `should` are the only dependencies for running unit tests.
 
 # Development
 
