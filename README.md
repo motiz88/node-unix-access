@@ -69,6 +69,7 @@ Tested on Debian Wheezy 7.0.
 Requires:
 
 * make
+* g++
 * Python 2.7
 
 # Dependencies
@@ -91,3 +92,16 @@ In order to develop this module, these steps are required:
 * Go to the newly created directory in Terminal
 * Run `npm install` to download dependencies
 * Run unit tests by `npm test`
+
+### Troubleshooting
+
+If you want to develop this module and try to install `dev_dependencies` by executing `npm install`, you may see the error message below:
+
+```
+
+    npm WARN cannot run in wd unix-access@0.1.0 node-gyp rebuild (wd=/root/unix-access-master)
+
+
+```
+
+The reason why `npm install` fails is that you run the `npm install` command as `root` user. If you really have to work under root user, use `npm install --unsafe-perm` instead.

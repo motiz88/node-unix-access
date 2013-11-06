@@ -3,6 +3,7 @@
 
 #include <node.h>
 #include <unistd.h>
+#include <string.h>
 #include "async.h"
 
 using namespace v8;
