@@ -97,7 +97,6 @@ If you want to develop this module and try to install `dev_dependencies` by exec
 
 ```
     npm WARN cannot run in wd unix-access@0.1.0 node-gyp rebuild (wd=/root/unix-access-master)
-
 ```
 
 The reason why `npm install` fails is that you run the `npm install` command as `root` user. If you really have to work under root user, use `npm install --unsafe-perm` instead.
