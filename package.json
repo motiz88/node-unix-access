@@ -26,8 +26,8 @@
   },
   "readmeFilename": "README.md",
   "license": "MIT",
-  "devDependencies": [
-    "mocha",
-    "should"
-  ]
+  "devDependencies": {
+    "mocha": "~1.14.0",
+    "should": "~2.0.2"
+  }
 }
