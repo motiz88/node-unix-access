@@ -1,5 +1,5 @@
 // The code below is inspired by https://github.com/rvagg/node-addon-examples/blob/master/9_async_work/async.cc
-// Amended to our needs to run access() function in unistd.h asynchronously
+// Amended to run access() function from unistd.h asynchronously
 
 #include <node.h>
 #include <unistd.h>

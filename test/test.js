@@ -1,7 +1,15 @@
 'use strict';
 
-// TODO finalise the unit tests
 // TODO test on debian linux
+/**
+ * Unit tests check owner dir/file permissions only because it is not possible to run chmod when not being dir/file owner.
+ * In order to test group/other permissions, this test would need to change owner to some other user, and would need to know root password to run 'sudo chmod'. This is desirable.
+ *
+ * Recalling UNIX permissions:
+ *   R = dec 4 (bin 100)
+ *   W = dec 2 (bin 010)
+ *   X = dec 1 (bin 001)
+ */
 
 var fs     = require('fs');
 var should = require('should');
@@ -17,27 +25,22 @@ var testFileMode;
 
 describe(pkg.name, function() {
     before(function() {
-        // ids of user and group this process is running under
+        // id of user this process is running under
         var uid = process.getuid();
-        var gid = process.getgid();
 
-        // verify that UID and GID of the testing dir/file are the same as of this process
-        // because unit tests count on this when setting permissions and verifying result of the access() calls
+        // verify that UID of the testing dir/file are the same as of this process because only dir/file owner can call chmod command
+        // chmod command is essential to allow unit tests to change dir/file permissions and verify results of the access() calls
         var stats = fs.statSync(testDir);
         should.exist(stats);
         stats.isDirectory().should.equal(true);
-        var msg = ' of the node.js process must be the same as of the \'' + testDir + '\' directory.';
-        stats.uid.should.equal(uid, 'UID' + msg);
-        stats.gid.should.equal(gid, 'GID' + msg);
+        stats.uid.should.equal(uid, 'UID of the node.js process must be the owner of \'' + testDir + '\' directory to allow permission manipulation via chmod command.');
         // save original permissions to get restored later
         testDirMode = stats.mode;
 
         stats = fs.statSync(testFile);
         should.exist(stats);
         stats.isFile().should.equal(true);
-        msg = ' of the node.js process must be the same as of the \'' + testFile + '\' file.';
-        stats.uid.should.equal(uid, 'UID' + msg);
-        stats.gid.should.equal(gid, 'GID' + msg);
+        stats.uid.should.equal(uid, 'UID of the node.js process must be the owner of  \'' + testFile + '\' file to allow permission manipulation via chmod command.');
         // save original permissions to get restored later
         testFileMode = stats.mode;
     });
@@ -83,8 +86,8 @@ describe(pkg.name, function() {
         it('should exist', function(done) {
             access.sync(testDir, '').should.equal(true);
             // invalid characters get skipped and thus permission string is considered to be empty
-            access.sync(testDir, ' abcd ').should.equal(true);
-            access.async(testFile, '', function(err, result) {
+            access.sync(testFile, ' abcd ').should.equal(true);
+            access.async(testDir, '', function(err, result) {
                 should.not.exist(err);
                 should.exist(result);
                 result.should.equal(true);
@@ -121,6 +124,7 @@ describe(pkg.name, function() {
         it('should have no permissions', function(done) {
             // drop all permissions
             fs.chmodSync(testDir, '000');
+            fs.chmodSync(testFile, '000');
 
             // tests include case-insensitivity of permission characters as well as ignoring invalid characters
             access.sync(testDir, 'r').should.equal(false);
@@ -131,17 +135,17 @@ describe(pkg.name, function() {
             access.sync(testDir, 'wx').should.equal(false);
             access.sync(testDir, 'rwx').should.equal(false);
 
-            access.async(testDir, 'r', function(err, result) {
+            access.async(testFile, 'r', function(err, result) {
                 should.not.exist(err);
                 should.exist(result);
                 result.should.equal(false);
 
-                access.async(testDir, 'w', function(err, result) {
+                access.async(testFile, 'w', function(err, result) {
                     should.not.exist(err);
                     should.exist(result);
                     result.should.equal(false);
 
-                    access.async(testDir, 'x', function(err, result) {
+                    access.async(testFile, 'x', function(err, result) {
                         should.not.exist(err);
                         should.exist(result);
                         result.should.equal(false);
@@ -152,53 +156,212 @@ describe(pkg.name, function() {
             });
         });
 
-        it.skip('should have R permissions', function(done) {
-            //fs.chmodSync(testDir, '000');
+        it('should be case-insensitive and ignore invalid permission characters', function(done) {
+            fs.chmodSync(testDir, '312');  // WX permissions for the owner
+            fs.chmodSync(testFile, '501'); // RX permissions for the owner
 
             // tests include case-insensitivity of permission characters as well as ignoring invalid characters
-            done();
+
+            access.sync(testDir, 'blah W   x oops').should.equal(true);
+            access.sync(testDir, ' R w X blah ').should.equal(false);
+            access.sync(testFile, ' R oops x').should.equal(true);
+            access.sync(testFile, 'wr oops X').should.equal(false);
+
+            access.async(testDir, 'x W kooky', function(err, result) {
+                should.not.exist(err);
+                should.exist(result);
+                result.should.equal(true);
+
+                access.async(testDir, 'Xsan', function(err, result) {
+                    should.not.exist(err);
+                    should.exist(result);
+                    result.should.equal(true);
+
+                    access.async(testFile, 'does have x but not peRmissions', function(err, result) {
+                        should.not.exist(err);
+                        should.exist(result);
+                        result.should.equal(true);
+
+                        access.async(testFile, 'does not have write permissions ', function(err, result) {
+                            should.not.exist(err);
+                            should.exist(result);
+                            result.should.equal(false);
+
+                            done();
+                        });
+                    });
+                });
+            });
         });
 
-        it.skip('should have W permissions', function(done) {
-            //fs.chmodSync(testDir, '000');
+        it('should have R permissions only', function(done) {
+            fs.chmodSync(testDir, '400');  // R permissions for the owner
+            fs.chmodSync(testFile, '416'); // R permissions for the owner
 
-            // tests include case-insensitivity of permission characters as well as ignoring invalid characters
-            done();
+            access.sync(testDir, 'r').should.equal(true);
+            access.sync(testDir, 'rw').should.equal(false);
+            access.sync(testDir, 'rx').should.equal(false);
+            access.sync(testDir, 'rwx').should.equal(false);
+            access.sync(testDir, 'w').should.equal(false);
+            access.sync(testDir, 'x').should.equal(false);
+
+            access.async(testFile, 'r', function(err, result) {
+                should.not.exist(err);
+                should.exist(result);
+                result.should.equal(true);
+
+                access.async(testFile, 'rx', function(err, result) {
+                    should.not.exist(err);
+                    should.exist(result);
+                    result.should.equal(false);
+
+                    access.async(testFile, 'rw', function(err, result) {
+                        should.not.exist(err);
+                        should.exist(result);
+                        result.should.equal(false);
+
+                        access.async(testFile, 'rws', function(err, result) {
+                            should.not.exist(err);
+                            should.exist(result);
+                            result.should.equal(false);
+
+                            access.async(testFile, 'w', function(err, result) {
+                                should.not.exist(err);
+                                should.exist(result);
+                                result.should.equal(false);
+
+                                access.async(testFile, 'x', function(err, result) {
+                                    should.not.exist(err);
+                                    should.exist(result);
+                                    result.should.equal(false);
+
+                                    done();
+                                });
+                            });
+                        });
+                    });
+                });
+            });
         });
 
-        it.skip('should have X permissions', function(done) {
-            //fs.chmodSync(testDir, '000');
+        it('should have WX permissions', function(done) {
+            fs.chmodSync(testDir, '340');  // WX permissions for the owner
+            fs.chmodSync(testFile, '361'); // WX permissions for the owner
 
-            // tests include case-insensitivity of permission characters as well as ignoring invalid characters
-            done();
+            access.sync(testFile, 'w').should.equal(true);
+            access.sync(testFile, 'x').should.equal(true);
+            access.sync(testFile, 'wx').should.equal(true);
+            access.sync(testFile, 'r').should.equal(false);
+            access.sync(testFile, 'rw').should.equal(false);
+            access.sync(testFile, 'rx').should.equal(false);
+            access.sync(testFile, 'rwx').should.equal(false);
+
+            access.async(testDir, 'w', function(err, result) {
+                should.not.exist(err);
+                should.exist(result);
+                result.should.equal(true);
+
+                access.async(testDir, 'x', function(err, result) {
+                    should.not.exist(err);
+                    should.exist(result);
+                    result.should.equal(true);
+
+                    access.async(testDir, 'wx', function(err, result) {
+                        should.not.exist(err);
+                        should.exist(result);
+                        result.should.equal(true);
+
+                        access.async(testDir, 'r', function(err, result) {
+                            should.not.exist(err);
+                            should.exist(result);
+                            result.should.equal(false);
+
+                            access.async(testDir, 'rw', function(err, result) {
+                                should.not.exist(err);
+                                should.exist(result);
+                                result.should.equal(false);
+
+                                access.async(testDir, 'rx', function(err, result) {
+                                    should.not.exist(err);
+                                    should.exist(result);
+                                    result.should.equal(false);
+
+                                    access.async(testDir, 'rwx', function(err, result) {
+                                        should.not.exist(err);
+                                        should.exist(result);
+                                        result.should.equal(false);
+
+                                        done();
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
         });
 
-        it.skip('should have RW permissions', function(done) {
-            //fs.chmodSync(testDir, '000');
+        it('should have RWX permissions', function(done) {
+            fs.chmodSync(testDir, '724');  // RWX permissions for the owner
+            fs.chmodSync(testFile, '751'); // RWX permissions for the owner
 
-            // tests include case-insensitivity of permission characters as well as ignoring invalid characters
-            done();
-        });
+            access.sync(testDir, 'r').should.equal(true);
+            access.sync(testDir, 'w').should.equal(true);
+            access.sync(testDir, 'x').should.equal(true);
+            access.sync(testDir, 'rw').should.equal(true);
+            access.sync(testDir, 'rx').should.equal(true);
+            access.sync(testDir, 'wx').should.equal(true);
+            access.sync(testDir, 'rwx').should.equal(true);
 
-        it.skip('should have RX permissions', function(done) {
-            //fs.chmodSync(testDir, '000');
+            access.async(testFile, 'r', function(err, result) {
+                should.not.exist(err);
+                should.exist(result);
+                result.should.equal(true);
 
-            // tests include case-insensitivity of permission characters as well as ignoring invalid characters
-            done();
-        });
+                access.async(testFile, 'r', function(err, result) {
+                    should.not.exist(err);
+                    should.exist(result);
+                    result.should.equal(true);
 
-        it.skip('should have WX permissions', function(done) {
-            //fs.chmodSync(testDir, '000');
+                    access.async(testFile, 'w', function(err, result) {
+                        should.not.exist(err);
+                        should.exist(result);
+                        result.should.equal(true);
 
-            // tests include case-insensitivity of permission characters as well as ignoring invalid characters
-            done();
-        });
+                        access.async(testFile, 'x', function(err, result) {
+                            should.not.exist(err);
+                            should.exist(result);
+                            result.should.equal(true);
 
-        it.skip('should have RWX permissions', function(done) {
-            //fs.chmodSync(testDir, '000');
+                            access.async(testFile, 'rw', function(err, result) {
+                                should.not.exist(err);
+                                should.exist(result);
+                                result.should.equal(true);
 
-            // tests include case-insensitivity of permission characters as well as ignoring invalid characters
-            done();
+                                access.async(testFile, 'rx', function(err, result) {
+                                    should.not.exist(err);
+                                    should.exist(result);
+                                    result.should.equal(true);
+
+                                    access.async(testFile, 'wx', function(err, result) {
+                                        should.not.exist(err);
+                                        should.exist(result);
+                                        result.should.equal(true);
+
+                                        access.async(testFile, 'rwx', function(err, result) {
+                                            should.not.exist(err);
+                                            should.exist(result);
+                                            result.should.equal(true);
+
+                                            done();
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
         });
     });
 });

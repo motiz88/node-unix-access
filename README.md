@@ -18,7 +18,7 @@ Just issue `require('unix-access')` and you can run two functions available: `sy
 
 ```js
 
-    var access = require('unix-access');    
+    var access = require('unix-access');
     var result;
 
     // synchronous checks
@@ -35,7 +35,7 @@ Just issue `require('unix-access')` and you can run two functions available: `sy
 
 ### sync(path, permissions)
 
-Both arguments are of `String` type. Return value is of `Boolean` type.
+Both arguments are of `String` type. Return value is of `Boolean` type. TypeError exception is thrown in case of incorrect type of aguments.
 
 Permissions may contain case-insensitive combination of `r`, `w`, and `x` characters. Any other characters will be stripped out.
 
@@ -43,7 +43,7 @@ Permissions may contain case-insensitive combination of `r`, `w`, and `x` charac
 
 ### async(path, permissions, callback)
 
-Works the same way as `sync` version but asychronously.
+Works the same way as `sync` version but asychronously. Callback argument must be of `Function` type.
 
 Two arguments will be passed over the `callback(err, result)` function. Err is of `String` type, result of `Boolean` type.
 
@@ -73,7 +73,7 @@ Requires:
 
 # Dependencies
 
-The module does not depend on any other code. For developers of this tool, `mocha` and `should` are the only dependencies for running unit tests.
+This module does not depend on any other Node.js module. For developers of this tool, `mocha` and `should` are the only dependencies for running unit tests.
 
 # Technical details
 
