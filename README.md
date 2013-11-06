@@ -47,6 +47,10 @@ Works the same way as `sync` version but asychronously.
 
 Two arguments will be passed over the `callback(err, result)` function. Err is of `String` type, result of `Boolean` type.
 
+# Installation
+
+`npm install unix-access`
+
 # Supported platforms and requirements
 
 ### OS X
@@ -67,17 +71,17 @@ Requires:
 * make
 * Python 2.7
 
-# Technical details
-
-
-
-# Installation
-
-`npm install unix-access`
-
 # Dependencies
 
 The module does not depend on any other code. For developers of this tool, `mocha` and `should` are the only dependencies for running unit tests.
+
+# Technical details
+
+Once issuing `npm install unix-access`, npm copies the module into node_modules directory and then executes `node-gyp rebuild` command to compile C++ sources. `node-gyp` is bundled within npm itself so you don't need to install it separately.
+
+The C++ code being built by `node-gyp` is a gue between Google's V8 engine and native OS access() call defined in <unistd.h>.
+
+Async function is really asynchronous (NOT just issuing callback in `process.nextTick()`). `uv_queue_work()` call from `libuv` manages the asynchronous execution in a separate thread pool.
 
 # Development
 

@@ -65,16 +65,16 @@ Handle<Value> accessAsync(const Arguments& args) {
         return scope.Close(Undefined());
     }
     if (!args[0]->IsString()) {
-      ThrowException(Exception::TypeError(String::New("First argument must be of String type")));
-      return scope.Close(Undefined());
+        ThrowException(Exception::TypeError(String::New("First argument must be of String type")));
+        return scope.Close(Undefined());
     }
     if (!args[1]->IsNumber()) {
-      ThrowException(Exception::TypeError(String::New("Second argument must be of Number type")));
-      return scope.Close(Undefined());
+        ThrowException(Exception::TypeError(String::New("Second argument must be of Number type")));
+        return scope.Close(Undefined());
     }
     if (!args[2]->IsFunction()) {
-      ThrowException(Exception::TypeError(String::New("Third argument must be of Function type")));
-      return scope.Close(Undefined());
+        ThrowException(Exception::TypeError(String::New("Third argument must be of Function type")));
+        return scope.Close(Undefined());
     }
 
     // Create our data structure that will be passed around
@@ -90,7 +90,7 @@ Handle<Value> accessAsync(const Arguments& args) {
     req->data = asyncData;
 
     // Pass the work token to libuv to be run when a worker-thread is available to
-        uv_queue_work(
+    uv_queue_work(
         uv_default_loop(),
         req,                           // Work token
         AsyncWork,                     // Work function
