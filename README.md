@@ -17,18 +17,18 @@ Just issue `require('unix-access')` and you can run two functions available: `sy
 ### Examples
 
 ```js
-    var access = require('unix-access');
-    var result;
+var access = require('unix-access');
+var result;
 
-    // synchronous checks
-    result = access.sync('/var/log/your_app.log', '');     // existence of the file
-    result = access.sync('/var/log/your_app.log', 'rw');   // read and write permissions
-    result = access.sync('/var/log/your_app_dir/', 'rwx'); // full control
+// synchronous checks
+result = access.sync('/var/log/your_app.log', '');     // existence of the file
+result = access.sync('/var/log/your_app.log', 'rw');   // read and write permissions
+result = access.sync('/var/log/your_app_dir/', 'rwx'); // full control
 
-    // asynchronous check for read and executable permissions
-    access.async('/bin/tar', 'rx', function(err, result) {
-        console.log(result);
-    });
+// asynchronous check for read and executable permissions
+access.async('/bin/tar', 'rx', function(err, result) {
+    console.log(result);
+});
 ```
 
 ### sync(path, permissions)
@@ -96,7 +96,7 @@ In order to develop this module, these steps are required:
 If you want to develop this module and try to install `dev_dependencies` by executing `npm install`, you may see the error message below:
 
 ```
-    npm WARN cannot run in wd unix-access@0.1.0 node-gyp rebuild (wd=/root/unix-access-master)
+npm WARN cannot run in wd unix-access@0.1.0 node-gyp rebuild (wd=/root/unix-access-master)
 ```
 
 The reason why `npm install` fails is that you run the `npm install` command as `root` user. If you really have to work under root user, use `npm install --unsafe-perm` instead.
