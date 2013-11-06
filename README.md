@@ -17,7 +17,6 @@ Just issue `require('unix-access')` and you can run two functions available: `sy
 ### Examples
 
 ```js
-
     var access = require('unix-access');
     var result;
 
@@ -30,7 +29,6 @@ Just issue `require('unix-access')` and you can run two functions available: `sy
     access.async('/bin/tar', 'rx', function(err, result) {
         console.log(result);
     });
-
 ```
 
 ### sync(path, permissions)
@@ -98,9 +96,7 @@ In order to develop this module, these steps are required:
 If you want to develop this module and try to install `dev_dependencies` by executing `npm install`, you may see the error message below:
 
 ```
-
     npm WARN cannot run in wd unix-access@0.1.0 node-gyp rebuild (wd=/root/unix-access-master)
-
 
 ```
 
