@@ -1,4 +1,4 @@
-# 0.1.1 / 2013-11-07
+# 0.1.1 / 2013-11-08
 
 * Added `mocha` and `should` versions into devDependencies in package.json to prevent future incompatibilities
 
