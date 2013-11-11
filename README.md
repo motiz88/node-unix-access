@@ -78,7 +78,7 @@ This module does not depend on any other Node.js module. For developers of this 
 
 Once issuing `npm install unix-access`, npm copies the module into node_modules directory and then executes `node-gyp rebuild` command to compile C++ sources. `node-gyp` is bundled within npm itself so you don't need to install it separately.
 
-The C++ code being built by `node-gyp` is a gue between Google's V8 engine and native OS access() call defined in <unistd.h>.
+The C++ code being built by `node-gyp` is a gue between Google's V8 engine and native OS access() call defined in `<unistd.h>`.
 
 Async function is really asynchronous (NOT just issuing callback in `process.nextTick()`). `uv_queue_work()` call from `libuv` manages the asynchronous execution in a separate thread pool.
 
