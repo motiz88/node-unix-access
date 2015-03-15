@@ -67,7 +67,7 @@ function acc(path, permissions, callback) {
  */
 exports.sync = function(path, permissions) {
     return acc(path, permissions);
-}
+};
 
 /**
  * Checks whether a path has specific permissions for the user this app is currently running under.
@@ -84,4 +84,4 @@ exports.async = function(path, permissions, callback) {
         throw new TypeError('Callback must be of Function type');
 
     return acc(path, permissions, callback);
-}
+};

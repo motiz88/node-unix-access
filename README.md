@@ -88,7 +88,9 @@ In order to develop this module, these steps are required:
 
 * Clone the git repo by executing `git clone URL`
 * Go to the newly created directory in Terminal
+* Run `npm install node-gyp -g`
 * Run `npm install` to download dependencies
+* Run `node-gyp rebuild` to build your modified code
 * Run unit tests by `npm test`
 
 ### Troubleshooting
