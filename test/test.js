@@ -1,6 +1,5 @@
 'use strict';
 
-// TODO test on debian linux
 /**
  * Unit tests check owner dir/file permissions only because it is not possible to run chmod when not being dir/file owner.
  * In order to test group/other permissions, this test would need to change owner to some other user, and would need to know rootUser password to run 'sudo chmod'. This is desirable.
