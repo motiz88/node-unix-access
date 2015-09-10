@@ -1,3 +1,7 @@
+# 0.3.0 / 2015-09-10
+
+* Rewritten the module by using `Nan` module to eliminate incompatibilities with new V8 versions (preparation for Node.js 4.0)
+
 # 0.2.0 / 2015-03-14
 
 * Updated the module to be compilable under Node.js 0.12.x where API of new V8 version has changed

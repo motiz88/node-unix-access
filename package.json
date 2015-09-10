@@ -1,6 +1,6 @@
 {
   "name": "unix-access",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Wrapper for access() UNIX C function",
   "main": "./index.js",
   "scripts": {
@@ -29,6 +29,9 @@
   },
   "readmeFilename": "README.md",
   "license": "MIT",
+  "dependencies": {
+    "nan": "~2.0.9"
+  },
   "devDependencies": {
     "mocha": "~2.2.1",
     "should": "~5.2.0"

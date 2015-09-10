@@ -1,3 +1,3 @@
-#include <node.h>
+#include <nan.h>
 
-void accessSync(const v8::FunctionCallbackInfo<v8::Value>& args);
+NAN_METHOD(accessSync);

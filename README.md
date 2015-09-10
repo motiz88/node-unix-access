@@ -8,8 +8,6 @@
 
 Ever needed to find out whether your app has specific permissions to a path? Now you can check a path for `read`, `write` and `execute/search` permissions on files and directories.
 
-For more information about UNIX `access()` function, run `man access` in your OS.
-
 # Usage
 
 Just issue `require('unix-access')` and you can run two functions available: `sync` and `async`.
@@ -53,16 +51,16 @@ Two arguments will be passed over the `callback(err, result)` function. Err is o
 
 ### OS X
 
-Tested on OS X Mavericks 10.9.
+Tested on OS X Yosemite 10.10.
 
 Requires:
 
-* Command Line Tools installed either separately or via Xcode
+* Xcode
 * Python 2.7 (present in the OS by default)
 
 ### Linux
 
-Tested on Debian Wheezy 7.0.
+Tested on Debian Wheezy 7.0 64bit.
 
 Requires:
 
@@ -72,15 +70,19 @@ Requires:
 
 # Dependencies
 
-This module does not depend on any other Node.js module. For developers of this tool, `mocha` and `should` are the only dependencies for running unit tests.
+This module only depends on `Nan` Node.js module which eliminates incompatibilities among Node.js versions.
+
+For developers of this tool, `mocha` and `should` are additional dependencies for running unit tests.
 
 # Technical details
 
 Once issuing `npm install unix-access`, npm copies the module into node_modules directory and then executes `node-gyp rebuild` command to compile C++ sources. `node-gyp` is bundled within npm itself so you don't need to install it separately.
 
-The C++ code being built by `node-gyp` is a gue between Google's V8 engine and native OS access() call defined in `<unistd.h>`.
+The C++ code being built by `node-gyp` is a gue between Google's V8 engine and native OS `access()` call defined in `<unistd.h>`.
 
 Async function is really asynchronous (NOT just issuing callback in `process.nextTick()`). `uv_queue_work()` call from `libuv` manages the asynchronous execution in a separate thread pool.
+
+For more information about UNIX `access()` function, run `man access` in your OS.
 
 # Development
 
