@@ -17,7 +17,8 @@ using v8::Local;
 AsyncWorker* platformAccessAsync(Local<Value> path, unsigned int mode, Callback* callback) {
 
     // Duplicate the path value to prevent garbage-collection of the original value
-    wchar_t *pathStr = _wcsdup(reinterpret_cast<const wchar_t*>(*String::Value(path)));
+    const uint16_t* path_u16 = *String::Value(path);
+    wchar_t *pathStr = _wcsdup(reinterpret_cast<const wchar_t*>(path_u16));
 
     return new AccessWorker<wchar_t>(pathStr, mode, callback);
 }
