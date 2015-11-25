@@ -1,4 +1,3 @@
-#include <unistd.h>
 #include "sync.h"
 
 using namespace Nan;
@@ -20,7 +19,7 @@ NAN_METHOD(accessSync) {
         return;
     }
 
-    int ret = access(*String::Utf8Value(info[0]->ToString()), info[1]->NumberValue());
+    int ret = platformAccessSync(info[0]->ToString(), info[1]->Uint32Value());
 
     // access returns 0 in case the access to the path is granted
     info.GetReturnValue().Set(ret == 0);
