@@ -2,7 +2,7 @@
 
 `Node.js` module wrapping `access()` UNIX C function, which is currently missing in both V8 and Node's fs API. Both `sync` and `async` implementations are available.
 
-`OS X` and `Linux` platforms supported.
+OS X, Linux and Windows platforms supported.
 
 # Introduction
 
