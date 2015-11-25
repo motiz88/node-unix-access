@@ -25,7 +25,7 @@
     "url": "https://github.com/lobodpav/node-unix-access/issues?state=open"
   },
   "engines": {
-    "node": "~0.12.0"
+    "node": ">= 0.8"
   },
   "readmeFilename": "README.md",
   "license": "MIT",
