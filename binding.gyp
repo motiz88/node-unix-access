@@ -15,10 +15,8 @@
             "conditions": [
                 ['OS!="linux"', {'sources/': [['exclude', '_linux\\.cc$']]}],
                 ['OS!="mac"', {'sources/': [['exclude', '_mac\\.cc|mm?$']]}],
-                ['OS=="win"', {'sources/': [
-                  ['include', '_win\\.cc$'],
-                  ['exclude', '_posix\\.cc$'],
-                ]}]
+                ['OS!="win"', {'sources/': [['exclude', '_win\\.cc$']]}],
+                ['OS=="win"', {'sources/': [['exclude', '_posix\\.cc$']]}]
             ]
         }
     ]
