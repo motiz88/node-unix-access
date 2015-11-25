@@ -27,9 +27,6 @@ NAN_METHOD(accessAsync) {
         return;
     }
 
-    // Duplicate the path value to prevent garbage-collection of the original value
-    
-    wchar_t *path = _wcsdup(reinterpret_cast<const wchar_t*>(*String::Value(info[0]->ToString())));
     int  mode = info[1]->Uint32Value();
     Callback *callback = new Callback(info[2].As<Function>());
 
